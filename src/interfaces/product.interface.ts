@@ -1,16 +1,16 @@
 export interface Product {
-  //!Todo: id:string;
+  id:string;
   description: string;
   images: string[];
   inStock: number;
   price: number;
-  sizes: ValidSizes[];
+  sizes: Sizes[];
   slug: string;
   tags: string[];
   title: string;
-  type: ValidTypes;
-  gender: 'men'|'women'|'kid'|'unisex'
+  // type: ValidTypes;
+  gender: ValidCategory;
 }
-
-type ValidSizes = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL';
-type ValidTypes = 'shirts'|'pants'|'hoodies'|'hats';
+export type ValidCategory = 'men'|'women'|'kid'|'unisex'
+export type Sizes = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL';
+export type ValidTypes = 'shirts'|'pants'|'hoodies'|'hats';
