@@ -5,7 +5,10 @@ import "./globals.css";
 
 
 export const metadata: Metadata = {
-  title: "Arroyo | Shop",
+  title: {
+    template: '%s - Arroyo | Shop',
+    default:'Home - Arroyo | Shop'
+  },
   description: "Ecommerce",
 };
 
