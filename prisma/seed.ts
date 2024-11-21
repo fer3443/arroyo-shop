@@ -2,14 +2,18 @@ import { initialData } from "../src/seed/seed";
 import { prisma } from "../src/lib/prisma";
 async function main() {
   // 1. Borrar registros previos
-  await Promise.all([
-    prisma.productImage.deleteMany(),
-    prisma.product.deleteMany(),
-    prisma.category.deleteMany(),
-  ]);
+  await prisma.user.deleteMany();
+  await prisma.productImage.deleteMany();
+  await prisma.product.deleteMany();
+  await prisma.category.deleteMany();
 
   // 2 . Insertar categorias
-  const { categories, products } = initialData;
+  const { categories, products, user } = initialData;
+
+  await prisma.user.createMany({
+    data:user
+  })
+
   const categoriesData = categories.map((category) => ({
     name: category,
   }));
@@ -47,14 +51,14 @@ async function main() {
     });
 
     //images
-    const imagesData = images.map(image => ({
-      url:image,
-      productId: dbProduct.id
-    }))
+    const imagesData = images.map((image) => ({
+      url: image,
+      productId: dbProduct.id,
+    }));
 
     await prisma.productImage.createMany({
-      data:imagesData
-    })
+      data: imagesData,
+    });
   });
 
   console.log("seed executed");
