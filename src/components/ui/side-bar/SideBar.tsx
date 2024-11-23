@@ -46,12 +46,12 @@ export const SideBar = () => {
       icon: <IoPersonOutline size={30} />,
       title: "Perfil",
     },
-    { href: "/", icon: <IoTicketOutline size={30} />, title: "Ordenes" },
+    { href: "/orders", icon: <IoTicketOutline size={30} />, title: "Ordenes" },
   ];
 
   const itemsNavAdmin: ItemsNav[] = [
     { href: "/", icon: <IoShirtOutline size={30} />, title: "Productos" },
-    { href: "/", icon: <IoTicketOutline size={30} />, title: "Ordenes" },
+    { href: "/orders", icon: <IoTicketOutline size={30} />, title: "Ordenes" },
     { href: "/", icon: <IoPeopleOutline size={30} />, title: "Usuarios" },
   ];
 
