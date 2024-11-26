@@ -1,5 +1,8 @@
 export * from './ui/top-menu/TopMenu';
-export * from './provider/Provider';
+export * from './providers/Providers';
+export * from './paypal/PaypalButton';
+
+export * from './orders/OrderStatus';
 
 export * from './ui/not-found/PageNotFound';
 export * from './ui/title/Title';
