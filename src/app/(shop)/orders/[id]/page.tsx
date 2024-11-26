@@ -1,17 +1,9 @@
 import { getOrderById } from "@/actions";
-import { Title } from "@/components";
-import { initialData } from "@/seed/seed";
+import { OrderStatus, PaypalButton, Title } from "@/components";
 import { currencyFormat } from "@/utils";
-import clsx from "clsx";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { IoCardOutline } from "react-icons/io5";
-
-const productsInCart = [
-  initialData.products[0],
-  initialData.products[1],
-  initialData.products[2],
-];
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -34,10 +26,13 @@ export default async function OrderByIdPage({ params }: Props) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
           {/*Carrito*/}
           <div className="flex flex-col mt-5">
-            <OrderPaid isPaid={order!.isPaid} />
+            <OrderStatus isPaid={order!.isPaid} />
 
             {order?.OrderItem.map((prod) => (
-              <div key={prod.product.slug + '-' + prod.size} className="flex mb-5">
+              <div
+                key={prod.product.slug + "-" + prod.size}
+                className="flex mb-5"
+              >
                 <Image
                   src={`/products/${prod.product.ProductImage[0].url}`}
                   width={100}
@@ -52,7 +47,7 @@ export default async function OrderByIdPage({ params }: Props) {
                 <div>
                   <p>{prod.product.title}</p>
                   <p>
-                   {currencyFormat(prod.price)} * {prod.quantity}
+                    {currencyFormat(prod.price)} * {prod.quantity}
                   </p>
                   <p className="font-bold">
                     Subtotal: {currencyFormat(prod.price * prod.quantity)}
@@ -64,17 +59,23 @@ export default async function OrderByIdPage({ params }: Props) {
           <div className="bg-white rounded-xl shadow-xl p-7">
             <h2 className="text-xl mb-2 font-bold">Dirección de entrega</h2>
             <div className="mb-10">
-              <p className="text-lg">{order?.OrderAddress?.firstName} {order?.OrderAddress?.lastName}</p>
+              <p className="text-lg">
+                {order?.OrderAddress?.firstName} {order?.OrderAddress?.lastName}
+              </p>
               <p>{order?.OrderAddress?.address}</p>
               <p>{order?.OrderAddress?.address2}</p>
-              <p>{order?.OrderAddress?.city} {order?.OrderAddress?.countryId}</p>
+              <p>
+                {order?.OrderAddress?.city} {order?.OrderAddress?.countryId}
+              </p>
               <p>{order?.OrderAddress?.postalCode}</p>
             </div>
             {/*Diveder */}
             <div className="w-full h-0.5 bg-gray-200 rounded mb-10" />
             <div className="grid grid-cols-2">
               <span>Nº Productos</span>
-              <span className="text-right">{order?.itemsInOrder} Articulos</span>
+              <span className="text-right">
+                {order?.itemsInOrder} Articulos
+              </span>
 
               <span>Subtotal</span>
               <span className="text-right">
@@ -89,7 +90,11 @@ export default async function OrderByIdPage({ params }: Props) {
             </div>
 
             <div className="mt-5 mb-2 w-full">
-              <OrderPaid isPaid={order!.isPaid} />
+              {order?.isPaid ? (
+                <OrderStatus isPaid={order!.isPaid} />
+              ) : (
+                <PaypalButton orderId={order!.id} amount={order!.total} />
+              )}
             </div>
           </div>
         </div>
@@ -97,18 +102,3 @@ export default async function OrderByIdPage({ params }: Props) {
     </div>
   );
 }
-
-const OrderPaid = ({ isPaid }: { isPaid: boolean }) => {
-  return (
-    <div
-      className={clsx(
-        "flex items-center rounded-lg py-2 px-3.5 text-xs font-bold text-white mb-5",
-        { "bg-red-500": !isPaid, "bg-green-700": isPaid }
-      )}
-    >
-      <IoCardOutline size={30} />
-      {/* <span className="mx-2">Pendiente de pago</span> */}
-      <span className="mx-2">{isPaid ? "Orden pagada" : "No pagada"}</span>
-    </div>
-  );
-};
