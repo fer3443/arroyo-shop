@@ -8,7 +8,6 @@ interface Props {
 
 export default async function HomePage({searchParams}:Props) {
   const page = (await searchParams).page ? Number((await searchParams).page) : 1;
-  // const page = (await searchParams).page;
 
   const {products, totalPages} = await getPaginatedProductsWithImages({page})
   return (

@@ -1,0 +1,32 @@
+import { getCategories, getProductSlug } from "@/actions";
+import { Title } from "@/components";
+import { redirect } from "next/navigation";
+import { ProductForm } from "./ui/ProductForm";
+
+interface Props {
+  params:Promise<{slug:string}>
+}
+
+export default async function AdminProductPage({params}:Props) {
+  const slug = (await params).slug;
+
+  //! Como ambas peticiones no son dependientes entre si puedo dispararlas al mismo tiempo
+  const [product, categories] = await Promise.all(
+    [
+      getProductSlug(slug),
+      getCategories()
+    ]
+  )
+
+  if(!product && slug !== 'new'){
+    redirect('/admin/products')
+  }
+
+  const title = (slug === 'new') ? 'Nuevo Producto' : 'Editar Producto'
+  return (
+    <>
+      <Title title={title}/>
+      <ProductForm product={product ?? {}} categories={categories}/>
+    </>
+  );
+}

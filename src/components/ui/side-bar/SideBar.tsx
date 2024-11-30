@@ -25,7 +25,7 @@ interface ItemsNav {
 }
 
 interface Props {
-  session: Session
+  session: Session;
 }
 
 export const SideBar = () => {
@@ -35,7 +35,7 @@ export const SideBar = () => {
   const isAdmin = session?.user.role;
   const isAuthenticate = !!session?.user;
   const handleLogOut = () => {
-    window.location.replace('/')
+    window.location.replace("/");
     logout();
     closeMenu();
   };
@@ -50,9 +50,13 @@ export const SideBar = () => {
   ];
 
   const itemsNavAdmin: ItemsNav[] = [
-    { href: "/", icon: <IoShirtOutline size={30} />, title: "Productos" },
-    { href: "/orders", icon: <IoTicketOutline size={30} />, title: "Ordenes" },
-    { href: "/", icon: <IoPeopleOutline size={30} />, title: "Usuarios" },
+    { href: "/admin/products", icon: <IoShirtOutline size={30} />, title: "Productos" },
+    {
+      href: "/admin/orders",
+      icon: <IoTicketOutline size={30} />,
+      title: "Ordenes",
+    },
+    { href: "/admin/users", icon: <IoPeopleOutline size={30} />, title: "Usuarios" },
   ];
 
   return (
@@ -124,6 +128,7 @@ export const SideBar = () => {
         {isAdmin === "admin" &&
           itemsNavAdmin.map((item) => (
             <Link
+              onClick={() => closeMenu()}
               key={item.title}
               href={item.href}
               className="flex items-center mt-5 p-2 hover:bg-gray-100 rounded transition-all"

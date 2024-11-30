@@ -6,9 +6,11 @@ import { prisma } from "./lib/prisma";
 import bcryptjs from "bcryptjs";
 
 
-// const authenticatedRoutes = [
-//   'checkout/address'
-// ]
+const PROTECTED_PATHS = [
+  {path:'/checkout', allowedRoles: ['admin', 'user']},
+  {path:'/orders', allowedRoles: ['admin', 'user']},
+  {path:'/admin', allowedRoles: ['admin']},
+]
 
 export const authConfig = {
   pages: {
@@ -18,16 +20,10 @@ export const authConfig = {
   
   callbacks: {
     // authorized({ auth, request: { nextUrl } }) {
-    //   console.log({auth})
-    //   const isLoggedIn = !!auth?.user;
-    //   const isOnDashboard = authenticatedRoutes;
-    //   if (isOnDashboard) {
-    //     if (isLoggedIn) return true;
-    //     return false; // Redirect unauthenticated users to login page
-    //   } else if (isLoggedIn) {
-    //     return Response.redirect(new URL('/', nextUrl));
-    //   }
-    //   return true;
+    //   const role = auth?.user?.role ?? 'unauthenticated';
+    //   const protectedPath = PROTECTED_PATHS.find(({path}) => nextUrl?.pathname.includes(path))
+    //   const canAccessPath = !protectedPath || protectedPath.allowedRoles.includes(role)
+    //   return canAccessPath;
     // },
 
     jwt({token, user}) {
