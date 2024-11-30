@@ -3,18 +3,27 @@
 import { auth } from "@/auth.config";
 import { prisma } from "@/lib/prisma";
 
-export const getOrderByUser = async () => {
+interface PaginationOptions {
+  page?:number;
+  take?:number;
+}
+
+export const getPaginatedOrders = async ({page = 1, take = 10}:PaginationOptions) => {
+  if(page < 1) page = 1;
+  if(isNaN(Number(page))) page = 1;
   try {
     const session = await auth();
-    if (!session?.user) {
+    if (session?.user.role !== 'admin') {
       return {
         ok: false,
-        message: "No se inicio sesión",
+        message: "No posee autorización",
       };
     }
     const orders = await prisma.order.findMany({
-      where: {
-        userId: session.user.id,
+      take,
+      skip: (page - 1) * take,
+      orderBy:{
+        createdAt:'desc'
       },
       include: {
         OrderAddress: {
@@ -25,9 +34,13 @@ export const getOrderByUser = async () => {
         },
       },
     });
+
+    const totalCount = await prisma.order.count()
+    const totalPages = Math.ceil(totalCount / take)
     return {
       ok:true,
-      orders
+      orders,
+      totalPages
     }
   } catch (error) {
     return {
@@ -35,4 +48,4 @@ export const getOrderByUser = async () => {
       message:'Hubo un problema'
     }
   }
-};
+}
